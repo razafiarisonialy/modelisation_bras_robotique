@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<robot name="bras_robotique" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find modelisation_bras_robotique)/urdf/arm.urdf.xacro"/>
+</robot>

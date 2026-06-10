@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot name="bras_robotique">
+  <group name="arm">
+    <chain base_link="base_link" tip_link="claw_support"/>
+  </group>
+  <group name="gripper">
+    <joint name="joint4"/>
+  </group>
+  <passive_joint name="joint5"/>
+  <group_state name="home" group="arm">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0"/>
+    <joint name="joint3" value="0"/>
+  </group_state>
+  <group_state name="ready" group="arm">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.45"/>
+    <joint name="joint3" value="-0.35"/>
+  </group_state>
+  <group_state name="open" group="gripper">
+    <joint name="joint4" value="0"/>
+  </group_state>
+  <group_state name="close" group="gripper">
+    <joint name="joint4" value="-0.5"/>
+  </group_state>
+  <end_effector name="gripper" parent_link="claw_support" group="gripper"/>
+  <disable_collisions link1="base_link" link2="base_plate" reason="Adjacent"/>
+  <disable_collisions link1="base_plate" link2="forward_drive_arm" reason="Adjacent"/>
+  <disable_collisions link1="forward_drive_arm" link2="horizontal_arm" reason="Adjacent"/>
+  <disable_collisions link1="horizontal_arm" link2="claw_support" reason="Adjacent"/>
+  <disable_collisions link1="claw_support" link2="gripper_right" reason="Adjacent"/>
+  <disable_collisions link1="claw_support" link2="gripper_left" reason="Adjacent"/>
+  <disable_collisions link1="gripper_right" link2="gripper_left" reason="Default"/>
+</robot>

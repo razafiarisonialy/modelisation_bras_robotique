@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <material name="industrial_dark">
+    <color rgba="0.08 0.09 0.10 1.0"/>
+  </material>
+  <material name="industrial_blue">
+    <color rgba="0.08 0.25 0.55 1.0"/>
+  </material>
+  <material name="industrial_silver">
+    <color rgba="0.72 0.74 0.75 1.0"/>
+  </material>
+  <material name="industrial_yellow">
+    <color rgba="0.95 0.68 0.12 1.0"/>
+  </material>
+  <material name="gripper_gray">
+    <color rgba="0.38 0.40 0.42 1.0"/>
+  </material>
+</robot>
