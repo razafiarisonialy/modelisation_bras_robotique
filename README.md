@@ -92,9 +92,29 @@ Les limites articulaires sont choisies pour eviter des mouvements excessifs :
 - `joint4` : `[-0.5, 0] rad`
 - `joint5` : `[0, 0.5] rad`, calcule par mimic depuis `joint4`
 
-Les origines de joints sont des estimations initiales. Des commentaires `TODO
-RViz` sont conserves dans le Xacro pour signaler les translations a affiner en
-comparant les emboitements des meshes dans RViz 2.
+Les origines de joints ont été précisément calculées et intégrées d'après les schémas techniques fournis :
+
+- `joint1` : décalage vertical de 3.07 cm (`0.0307` m) sur Z.
+- `joint2` : décalage vertical de 3.5 cm (`0.035` m) sur Z et décalage horizontal de 2 mm (`0.002` m) sur X.
+- `joint3` : décalage vertical de 8.0 cm (`0.08` m) sur Z.
+- `joint_claw` : longueur de bras de 8.2 cm (`0.082` m) sur Y.
+- `joint4` & `joint5` (pince) : décalage vertical de -1.0 cm (`-0.01` m) sur Z, et décalage horizontal de +1.1 cm (`0.011` m) / -1.1 cm (`-0.011` m) sur Y (écart de 2.2 cm entre les pivots).
+
+### Tracabilite schema -> joint
+
+| Reperes (image) | Cote mesuree | Joint | Axe retenu | Valeur xacro |
+|---|---|---|---|---|
+| `base_link` / `base_plate` | 3.07 cm | `joint1` | Z | `0.0307` |
+| `base_plate` / `forward_drive_arm` | 3.5 cm + 2 mm | `joint2` | Z + X | `0.035` / `0.002` |
+| `forward_drive_arm` / `horizontal_arm` | 8 cm | `joint3` | Z | `0.08` |
+| `horizontal_arm` / `claw_support` | 8.2 cm | `joint_claw` | Y | `0.082` |
+| `claw_support` / `gripper_right` & `gripper_left` | 1 cm, 2.2 cm, 4 mm | `joint4` / `joint5` | Z, Y | `-0.01` / `+-0.011` |
+
+Les magnitudes proviennent directement des cotes des schemas. L'axe (X/Y/Z et
+signe) retenu pour chaque joint est une hypothese de depart a confirmer
+visuellement dans RViz avec `joint_state_publisher_gui` (voir section
+"Difficultes et solutions") : si un lien ne s'emboite pas correctement, on
+permute l'axe/signe en conservant la magnitude mesuree.
 
 ## Installation
 
@@ -105,8 +125,8 @@ mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 git clone https://github.com/razafiarisonialy/modelisation_bras_robotique.git
 cd ..
-rosdep install --from-paths src --ignore-src -r -y
-colcon build --symlink-install
+rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
+colcon build --packages-select modelisation_bras_robotique
 source install/setup.bash
 ```
 
@@ -137,7 +157,14 @@ Dans RViz, activer/desactiver `Collision Enabled` dans le display
 ## MoveIt 2
 
 La configuration MoveIt 2 se trouve dans
-`modelisation_bras_robotique_moveit_config/`.
+`modelisation_bras_robotique_moveit_config/`. Ce package n'est pas construit
+par la commande `colcon build --packages-select modelisation_bras_robotique`
+de la section "Installation" : il faut le builder separement.
+
+```bash
+colcon build --packages-select modelisation_bras_robotique_moveit_config
+source install/setup.bash
+```
 
 Lancement de la demo :
 
@@ -174,8 +201,6 @@ Les captures demandees par l'enonce peuvent etre placees dans
   Solution : referencer les fichiers fournis avec leur extension exacte `.STL`.
 - Les formes de collision detaillees seraient trop couteuses pour la
   planification. Solution : collisions primitives simplifiees.
-- Les origines de joints ne sont pas donnees dans le sujet. Solution : poser
-  des valeurs initiales commentees, puis les ajuster dans RViz 2 avec
-  `joint_state_publisher_gui`.
+- Les origines de joints ne sont pas données explicitement dans les fichiers sources. Solution : analyse précise des schémas cotés et des repères dans les images pour en déduire les magnitudes de chaque pivot (voir tableau de tracabilité ci-dessus), puis vérification/ajustement des axes dans RViz 2 avec `joint_state_publisher_gui` pour confirmer l'emboîtement des meshes.
 - La pince doit rester symetrique. Solution : utiliser un joint revolute mimic
   sur `joint5`, couple a `joint4`.

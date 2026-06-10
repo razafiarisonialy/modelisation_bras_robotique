@@ -10,9 +10,9 @@
       izz="${mass * (x * x + y * y) / 12.0}"/>
   </xacro:macro>
 
-  <xacro:macro name="box_link_inertial" params="mass x y z">
+  <xacro:macro name="box_link_inertial" params="mass x y z xyz:='0 0 0' rpy:='0 0 0'">
     <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
       <mass value="${mass}"/>
       <xacro:box_inertia mass="${mass}" x="${x}" y="${y}" z="${z}"/>
     </inertial>

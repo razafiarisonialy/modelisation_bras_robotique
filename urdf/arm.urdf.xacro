@@ -12,8 +12,8 @@
 
   <link name="base_link">
     <xacro:mesh_visual mesh="basement.STL" material="industrial_dark" xyz="-0.5 -0.5 0" rpy="0 0 0"/>
-    <xacro:box_collision xyz="0 0 0.025" rpy="0 0 0" size="1.0 1.0 0.05"/>
-    <xacro:box_link_inertial mass="1.0" x="1.0" y="1.0" z="0.05"/>
+    <xacro:cylinder_collision xyz="0 0 0.015" rpy="0 0 0" radius="0.06" length="0.03"/>
+    <xacro:box_link_inertial mass="1.0" x="0.12" y="0.12" z="0.03" xyz="0 0 0.015"/>
   </link>
 
   <joint name="virtual_joint" type="fixed">
@@ -24,88 +24,88 @@
 
   <link name="base_plate">
     <xacro:mesh_visual mesh="base_plate.STL" material="industrial_silver" xyz="-0.39 -0.39 -0.56" rpy="0 0 0"/>
-    <xacro:cylinder_collision xyz="0 0 0.04" rpy="0 0 0" radius="0.22" length="0.08"/>
-    <xacro:box_link_inertial mass="0.8" x="0.44" y="0.44" z="0.08"/>
+    <xacro:cylinder_collision xyz="0 0 0.0175" rpy="0 0 0" radius="0.05" length="0.035"/>
+    <xacro:box_link_inertial mass="0.8" x="0.1" y="0.1" z="0.035" xyz="0 0 0.0175"/>
   </link>
 
   <joint name="joint1" type="revolute">
     <parent link="base_link"/>
     <child link="base_plate"/>
-    <!-- TODO RViz: affiner la hauteur exacte du pivot de rotation de la base. -->
-    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <!-- Repere base_link/base_plate : ecart vertical de 3.07 cm mesure sur le schema -> Z=0.0307. Axe a confirmer dans RViz. -->
+    <origin xyz="0 0 0.0307" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-3.14" upper="3.14" effort="30.0" velocity="2.0"/>
   </joint>
 
   <link name="forward_drive_arm">
     <xacro:mesh_visual mesh="forward_drive_arm.STL" material="industrial_blue" xyz="0.19 0.06 -0.08" rpy="0 -${PI/2} ${PI/2}"/>
-    <xacro:box_collision xyz="0.16 0 0.18" rpy="0 0 0" size="0.16 0.18 0.36"/>
-    <xacro:box_link_inertial mass="0.6" x="0.16" y="0.18" z="0.36"/>
+    <xacro:box_collision xyz="0 0 0.04" rpy="0 0 0" size="0.04 0.04 0.08"/>
+    <xacro:box_link_inertial mass="0.6" x="0.04" y="0.04" z="0.08" xyz="0 0 0.04"/>
   </link>
 
   <joint name="joint2" type="revolute">
     <parent link="base_plate"/>
     <child link="forward_drive_arm"/>
-    <!-- TODO RViz: ajuster ce pivot d'epaule avec les STL officiels. -->
-    <origin xyz="0 0 0.08" rpy="0 0 0"/>
+    <!-- Repere base_plate/forward_drive_arm : ecart vertical de 3.5 cm + ecart lateral de 2 mm mesures sur le schema -> Z=0.035, X=0.002. Axes a confirmer dans RViz. -->
+    <origin xyz="0.002 0 0.035" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <limit lower="-1.57" upper="1.57" effort="25.0" velocity="2.0"/>
   </joint>
 
   <link name="horizontal_arm">
     <xacro:mesh_visual mesh="horizontal_arm.STL" material="industrial_yellow" xyz="-0.03 -0.4 -0.06" rpy="${PI/2} 0 ${PI/2}"/>
-    <xacro:box_collision xyz="0.28 0 0" rpy="0 0 0" size="0.56 0.12 0.12"/>
-    <xacro:box_link_inertial mass="0.5" x="0.56" y="0.12" z="0.12"/>
+    <xacro:box_collision xyz="0 0.041 0" rpy="0 0 0" size="0.03 0.082 0.03"/>
+    <xacro:box_link_inertial mass="0.5" x="0.03" y="0.082" z="0.03" xyz="0 0.041 0"/>
   </link>
 
   <joint name="joint3" type="revolute">
     <parent link="forward_drive_arm"/>
     <child link="horizontal_arm"/>
-    <!-- TODO RViz: ajuster la translation du coude pour emboiter les deux bras. -->
-    <origin xyz="0.16 0 0.36" rpy="0 0 0"/>
+    <!-- Repere forward_drive_arm/horizontal_arm : ecart vertical de 8 cm mesure sur le schema -> Z=0.08. Axe a confirmer dans RViz. -->
+    <origin xyz="0 0 0.08" rpy="0 0 0"/>
     <axis xyz="1 0 0"/>
     <limit lower="-1.57" upper="1.57" effort="20.0" velocity="2.0"/>
   </joint>
 
   <link name="claw_support">
     <xacro:mesh_visual mesh="claw_support.STL" material="industrial_silver" xyz="0 -0.05 -0.15" rpy="0 0 ${PI/2}"/>
-    <xacro:box_collision xyz="0.05 0 0" rpy="0 0 0" size="0.12 0.16 0.12"/>
-    <xacro:box_link_inertial mass="0.25" x="0.12" y="0.16" z="0.12"/>
+    <xacro:box_collision xyz="0 0 -0.01" rpy="0 0 0" size="0.04 0.04 0.03"/>
+    <xacro:box_link_inertial mass="0.25" x="0.04" y="0.04" z="0.03" xyz="0 0 -0.01"/>
   </link>
 
   <joint name="joint_claw" type="fixed">
     <parent link="horizontal_arm"/>
     <child link="claw_support"/>
-    <!-- TODO RViz: affiner la position du support de pince en bout de bras. -->
-    <origin xyz="0.56 0 0" rpy="0 0 0"/>
+    <!-- Repere horizontal_arm/claw_support : longueur d'avant-bras de 8.2 cm mesuree sur le schema -> Y=0.082. Axe a confirmer dans RViz. -->
+    <origin xyz="0 0.082 0" rpy="0 0 0"/>
   </joint>
 
   <link name="gripper_right">
     <xacro:mesh_visual mesh="right_finger.STL" material="gripper_gray" xyz="-0.1 0.5 -0.1" rpy="0 0 -${PI/2}"/>
-    <xacro:box_collision xyz="0.10 -0.04 0" rpy="0 0 0" size="0.20 0.04 0.08"/>
-    <xacro:box_link_inertial mass="0.1" x="0.20" y="0.04" z="0.08"/>
+    <xacro:box_collision xyz="0 0.015 -0.005" rpy="0 0 0" size="0.015 0.03 0.01"/>
+    <xacro:box_link_inertial mass="0.1" x="0.015" y="0.03" z="0.01" xyz="0 0.015 -0.005"/>
   </link>
 
   <joint name="joint4" type="revolute">
     <parent link="claw_support"/>
     <child link="gripper_right"/>
-    <!-- TODO RViz: aligner le pivot du doigt droit avec l'axe mecanique du mesh. -->
-    <origin xyz="0.08 -0.04 0" rpy="0 0 0"/>
+    <!-- Repere claw_support/gripper_right : ecart de 2.2 cm entre pivots reparti +/-1.1 cm sur Y, decalage de -1 cm sur Z (mesures pince). Axes a confirmer dans RViz. -->
+    <origin xyz="0 0.011 -0.01" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-0.5" upper="0.0" effort="10.0" velocity="2.0"/>
   </joint>
 
   <link name="gripper_left">
     <xacro:mesh_visual mesh="left_finger.STL" material="gripper_gray" xyz="-0.04 0.5 -0.1" rpy="0 0 -${PI/2}"/>
-    <xacro:box_collision xyz="0.10 0.04 0" rpy="0 0 0" size="0.20 0.04 0.08"/>
-    <xacro:box_link_inertial mass="0.1" x="0.20" y="0.04" z="0.08"/>
+    <xacro:box_collision xyz="0 0.015 -0.005" rpy="0 0 0" size="0.015 0.03 0.01"/>
+    <xacro:box_link_inertial mass="0.1" x="0.015" y="0.03" z="0.01" xyz="0 0.015 -0.005"/>
   </link>
 
   <joint name="joint5" type="revolute">
     <parent link="claw_support"/>
     <child link="gripper_left"/>
-    <!-- TODO RViz: aligner le pivot du doigt gauche avec l'axe mecanique du mesh. -->
-    <origin xyz="0.08 0.04 0" rpy="0 0 0"/>
+    <!-- Repere claw_support/gripper_left : symetrique de joint4 (Y=-0.011, Z=-0.01), suit joint4 via mimic. Axes a confirmer dans RViz. -->
+    <origin xyz="0 -0.011 -0.01" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="0.0" upper="0.5" effort="10.0" velocity="2.0"/>
     <mimic joint="joint4" multiplier="-1"/>
