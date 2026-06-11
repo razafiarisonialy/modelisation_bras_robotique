@@ -5,11 +5,14 @@ visualiser dans RViz 2 et fournir une base de configuration MoveIt 2.
 
 ## Structure du depot
 
-- `urdf/` : description Xacro du robot (`arm.urdf.xacro`), macros et materiaux.
-- `meshes/` : meshes STL references par les visuels.
-- `launch/` : lancement RViz 2 pour la description du robot.
-- `rviz/` : configuration RViz de visualisation.
-- `config/` : fichiers de configuration simples pour le package de description.
+Le depot contient deux packages ROS 2 independants, places cote a cote :
+
+- `modelisation_bras_robotique/` : package de description du robot.
+  - `urdf/` : description Xacro du robot (`arm.urdf.xacro`), macros et materiaux.
+  - `meshes/` : meshes STL references par les visuels.
+  - `launch/` : lancement RViz 2 pour la description du robot.
+  - `rviz/` : configuration RViz de visualisation.
+  - `config/` : fichiers de configuration simples pour le package de description.
 - `modelisation_bras_robotique_moveit_config/` : package MoveIt 2.
 
 ## Choix URDF vs Xacro
