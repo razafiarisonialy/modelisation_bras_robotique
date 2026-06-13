@@ -60,7 +60,7 @@ def generate_launch_description():
 
     rviz_config = os.path.join(
         get_package_share_directory(moveit_pkg),
-        "rviz",
+        "config",
         "moveit.rviz",
     )
 

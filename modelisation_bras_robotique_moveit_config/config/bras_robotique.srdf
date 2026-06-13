@@ -24,10 +24,14 @@
     <joint name="joint4" value="-0.5"/>
   </group_state>
   <end_effector name="gripper" parent_link="claw_support" group="gripper"/>
+  <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="base_link"/>
   <disable_collisions link1="base_link" link2="base_plate" reason="Adjacent"/>
+  <disable_collisions link1="base_link" link2="forward_drive_arm" reason="Never"/>
   <disable_collisions link1="base_plate" link2="forward_drive_arm" reason="Adjacent"/>
   <disable_collisions link1="forward_drive_arm" link2="horizontal_arm" reason="Adjacent"/>
   <disable_collisions link1="horizontal_arm" link2="claw_support" reason="Adjacent"/>
+  <disable_collisions link1="horizontal_arm" link2="gripper_left" reason="Always"/>
+  <disable_collisions link1="horizontal_arm" link2="gripper_right" reason="Always"/>
   <disable_collisions link1="claw_support" link2="gripper_right" reason="Adjacent"/>
   <disable_collisions link1="claw_support" link2="gripper_left" reason="Adjacent"/>
   <disable_collisions link1="gripper_right" link2="gripper_left" reason="Default"/>

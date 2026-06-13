@@ -128,7 +128,28 @@ mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 git clone https://github.com/razafiarisonialy/modelisation_bras_robotique.git
 cd ..
+```
+
+### Installation des dependances
+
+Le depot contient les deux packages cote a cote (description + MoveIt 2). Pour
+installer toutes leurs dependances en une seule fois :
+
+```bash
+sudo apt update
+rosdep update
 rosdep install -i --from-path src --rosdistro $ROS_DISTRO -y
+```
+
+Cette commande couvre `xacro`, `robot_state_publisher`,
+`joint_state_publisher_gui`, `rviz2` ainsi que les paquets MoveIt 2
+(`moveit_ros_move_group`, `moveit_ros_visualization`, `moveit_planners_ompl`,
+`moveit_kinematics`, `moveit_configs_utils`) car `rosdep` lit le `package.xml`
+de chaque package present dans `src`.
+
+### Build du package de description
+
+```bash
 colcon build --packages-select modelisation_bras_robotique
 source install/setup.bash
 ```
@@ -164,6 +185,13 @@ La configuration MoveIt 2 se trouve dans
 par la commande `colcon build --packages-select modelisation_bras_robotique`
 de la section "Installation" : il faut le builder separement.
 
+Les paquets MoveIt 2 (`moveit_ros_move_group`, `moveit_ros_visualization`,
+`moveit_planners_ompl`, `moveit_kinematics`, `moveit_configs_utils`) ne sont
+pas installes par defaut avec ROS 2. Suivre le guide d'installation officiel :
+https://moveit.ai/install-moveit2/binary/
+
+Puis builder le package MoveIt :
+
 ```bash
 colcon build --packages-select modelisation_bras_robotique_moveit_config
 source install/setup.bash
@@ -189,15 +217,6 @@ Etapes manuelles recommandees avec MoveIt Setup Assistant :
 6. Ajouter les poses `home`, `ready`, `open` et `close`.
 7. Generer le package `modelisation_bras_robotique_moveit_config` et tester avec `demo.launch.py`.
 
-## Captures a ajouter
-
-Les captures demandees par l'enonce peuvent etre placees dans
-`docs/images/` :
-
-- modele complet dans RViz 2 ;
-- affichage des collisions ;
-- demo MoveIt 2 avec une trajectoire planifiee.
-
 ## Difficultes et solutions
 
 - Les URI de meshes peuvent echouer sous Linux si la casse ne correspond pas.
@@ -207,3 +226,7 @@ Les captures demandees par l'enonce peuvent etre placees dans
 - Les origines de joints ne sont pas données explicitement dans les fichiers sources. Solution : analyse précise des schémas cotés et des repères dans les images pour en déduire les magnitudes de chaque pivot (voir tableau de tracabilité ci-dessus), puis vérification/ajustement des axes dans RViz 2 avec `joint_state_publisher_gui` pour confirmer l'emboîtement des meshes.
 - La pince doit rester symetrique. Solution : utiliser un joint revolute mimic
   sur `joint5`, couple a `joint4`.
+- `demo.launch.py` echoue avec `package 'moveit_ros_move_group' not found`.
+  Solution : MoveIt 2 n'est pas installe sur le systeme, voir la section
+  "MoveIt 2" et le guide officiel https://moveit.ai/install-moveit2/binary/
+  avant de builder.
