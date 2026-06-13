@@ -3,7 +3,5 @@ from moveit_configs_utils.launches import generate_setup_assistant_launch
 
 
 def generate_launch_description():
-    moveit_config = MoveItConfigsBuilder(
-        "bras_robotique", package_name="modelisation_bras_robotique_moveit_config"
-    ).to_moveit_configs()
+    moveit_config = MoveItConfigsBuilder("bras_robotique", package_name="modelisation_bras_robotique_moveit_config").to_moveit_configs()
     return generate_setup_assistant_launch(moveit_config)

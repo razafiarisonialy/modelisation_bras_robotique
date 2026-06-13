@@ -6,8 +6,8 @@ moveit_setup_assistant_config:
     relative_path: config/bras_robotique.srdf
   package_settings:
     author_name: ialy
-    author_email: razafiarisonialy"gmail.com
-    generated_timestamp: 1781316080
+    author_email: razafiarisonialy@gmail.com
+    generated_timestamp: 1781319332
   control_xacro:
     command:
       - position
